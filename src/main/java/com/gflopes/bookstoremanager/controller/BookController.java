@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/books")
 public class BookController {
 
-    @Operation(summary = "Return an example hello world")
+    @Operation(summary = "Return an example hello world!")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success method return")
     })
