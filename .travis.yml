@@ -12,6 +12,6 @@ script:
 cache:
   directories:
     - $HOME/.m2
-    - $home/.sonar/cache
+    - $home/travis/.sonar/cache
 before_install:
   - chmod +x mvnw
