@@ -19,7 +19,7 @@ public class PublisherDTO {
 
     @NotNull
     @NotEmpty
-    @Size(max = 255)
+    @Size(max = 250)
     private String name;
 
     @NotNull

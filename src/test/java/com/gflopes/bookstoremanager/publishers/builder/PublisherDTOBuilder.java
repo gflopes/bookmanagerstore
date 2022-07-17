@@ -10,10 +10,13 @@ public class PublisherDTOBuilder {
     @Builder.Default
     private Long id = 1L;
 
+    @Builder.Default
     private String name = "Gustavo Lopes Editora Ltda";
 
+    @Builder.Default
     private String code = "GUZAO1234";
 
+    @Builder.Default
     private LocalDate foundationDate = LocalDate.of(2022, 05, 10);
 
     public PublisherDTO buildPublisherDTO() {

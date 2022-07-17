@@ -48,8 +48,8 @@ public class AuthorServiceTest {
         AuthorDTO expectedAuthorToCreatedDTO = authorDTOBuilder.buildAuthorDTO();
         Author expectedCreatedAuthor = authorMapper.toModel(expectedAuthorToCreatedDTO);
 
-        when(authorRepository.save(expectedCreatedAuthor)).thenReturn(expectedCreatedAuthor);
         when(authorRepository.findByName(expectedCreatedAuthor.getName())).thenReturn(Optional.empty());
+        when(authorRepository.save(expectedCreatedAuthor)).thenReturn(expectedCreatedAuthor);
 
         AuthorDTO createdAuthorDTO = authorService.create(expectedAuthorToCreatedDTO);
 
