@@ -1,11 +1,14 @@
 package com.gflopes.bookstoremanager.users.controller;
 
-import com.gflopes.bookstoremanager.publishers.service.PublisherService;
 import com.gflopes.bookstoremanager.users.controller.docs.UserControllerDocs;
+import com.gflopes.bookstoremanager.users.dto.MessageDTO;
+import com.gflopes.bookstoremanager.users.dto.UserDTO;
 import com.gflopes.bookstoremanager.users.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -18,5 +21,15 @@ public class UserController implements UserControllerDocs {
         this.userService = userService;
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public MessageDTO create(@RequestBody @Valid UserDTO userToCreateDTO) {
+        return userService.create(userToCreateDTO);
+    }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        userService.delete(id);
+    }
 }

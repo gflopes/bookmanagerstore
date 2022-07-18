@@ -132,5 +132,4 @@ public class PublisherServiceTest {
 
         assertThrows(PublisherNotFoundException.class, () -> publisherService.delete(expectedInvalidPublisherId));
     }
-
 }

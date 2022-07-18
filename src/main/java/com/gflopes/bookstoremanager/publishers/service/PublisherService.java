@@ -47,8 +47,8 @@ public class PublisherService {
     }
 
     public void delete(Long id) {
-        Publisher author = verifyAndGetPublisher(id);
-        publisherRepository.deleteById(id);
+        Publisher publisher = verifyAndGetPublisher(id);
+        publisherRepository.deleteById(publisher.getId());
     }
 
     private Publisher verifyAndGetPublisher(Long id) {

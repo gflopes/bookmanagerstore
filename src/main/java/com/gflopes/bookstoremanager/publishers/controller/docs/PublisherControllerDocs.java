@@ -14,8 +14,8 @@ public interface PublisherControllerDocs {
 
     @Operation(summary = "Publishers create operation")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Success created author"),
-            @ApiResponse(responseCode = "400", description = "Missing required field(s), wrong field(s) range value or author already registered on system")
+            @ApiResponse(responseCode = "201", description = "Success created publisher"),
+            @ApiResponse(responseCode = "400", description = "Missing required field(s), wrong field(s) range value or publisher already registered on system")
     })
     PublisherDTO create(PublisherDTO publisherDTO);
 

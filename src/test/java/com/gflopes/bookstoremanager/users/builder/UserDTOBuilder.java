@@ -33,7 +33,7 @@ public class UserDTOBuilder {
     @Builder.Default
     private LocalDate birthDate = LocalDate.of(1973, 9, 22);
 
-    public UserDTO builderUserDTO() {
+    public UserDTO buildUserDTO() {
             return new UserDTO(id,
                     name,
                     age,
