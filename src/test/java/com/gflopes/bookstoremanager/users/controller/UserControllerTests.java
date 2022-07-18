@@ -21,8 +21,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -87,5 +86,23 @@ public class UserControllerTests {
         mockMvc.perform(delete(USERS_API_URL_PATH + "/" + expectedDeleteUserId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenPUTIsCalledThenStatusCreatedShouldByReturned() throws Exception {
+        UserDTO expectedUpdatedUserDTO = userDTOBuilder.buildUserDTO();
+        expectedUpdatedUserDTO.setUsername("gflopes22update");
+        String expectedUpdatedMessage = "User gflopes22update with ID 1 successfully updated";
+        MessageDTO expectedUpdatedMessageDTO = MessageDTO.builder().message(expectedUpdatedMessage).build();
+        var expectedUserIdUpdated = expectedUpdatedUserDTO.getId();
+
+        when(userService.update(expectedUserIdUpdated, expectedUpdatedUserDTO))
+                .thenReturn(expectedUpdatedMessageDTO);
+
+        mockMvc.perform(put(USERS_API_URL_PATH + "/" + expectedUserIdUpdated)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(JsonConversionUtils.asJsonString(expectedUpdatedUserDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is(expectedUpdatedMessage)));
     }
 }

@@ -10,6 +10,9 @@ import com.gflopes.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.gflopes.bookstoremanager.users.utils.MessageDTOUtils.createdMessage;
+import static com.gflopes.bookstoremanager.users.utils.MessageDTOUtils.updatedMessage;
+
 @Service
 public class UserService {
 
@@ -28,7 +31,7 @@ public class UserService {
         User userToCreate = userMapper.toModel(userToCreateDTO);
         User createdUser = userRepository.save(userToCreate);
 
-        return returnMessage(createdUser, "created");
+        return createdMessage(createdUser);
     }
 
     public MessageDTO update(Long id, UserDTO userToUpdateDTO) {
@@ -39,16 +42,7 @@ public class UserService {
         userToUpdate.setCreatedDate(foundUser.getCreatedDate());
         User updatedUser = userRepository.save(userToUpdate);
 
-        return returnMessage(updatedUser, "updated");
-    }
-
-    private MessageDTO returnMessage(User updateUser, String action) {
-        String updatedUsername = updateUser.getUsername();
-        Long updateId = updateUser.getId();
-        String updateStringUserMessage = String.format("User %s with ID %s successfully %s", updatedUsername, updateId, action  );
-        return MessageDTO.builder()
-                .message(updateStringUserMessage)
-                .build();
+        return updatedMessage(updatedUser);
     }
 
     public void delete(Long id) {
