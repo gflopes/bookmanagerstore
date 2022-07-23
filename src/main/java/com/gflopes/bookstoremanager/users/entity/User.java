@@ -3,6 +3,7 @@ package com.gflopes.bookstoremanager.users.entity;
 import com.gflopes.bookstoremanager.books.entity.Book;
 import com.gflopes.bookstoremanager.entity.Auditable;
 import com.gflopes.bookstoremanager.enums.Gender;
+import com.gflopes.bookstoremanager.enums.Role;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,4 +43,7 @@ public class User extends Auditable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Book> books;
 
+    @Enumerated(EnumType.STRING)
+    @Column(unique = false, length = 20)
+    private Role role;
 }

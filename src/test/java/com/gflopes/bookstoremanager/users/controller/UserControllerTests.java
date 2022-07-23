@@ -1,9 +1,12 @@
 package com.gflopes.bookstoremanager.users.controller;
 
-import com.gflopes.bookstoremanager.publishers.dto.PublisherDTO;
+import com.gflopes.bookstoremanager.jwt.dto.JwtRequest;
+import com.gflopes.bookstoremanager.jwt.dto.JwtResponse;
+import com.gflopes.bookstoremanager.users.builder.JwtRequestBuilder;
 import com.gflopes.bookstoremanager.users.builder.UserDTOBuilder;
 import com.gflopes.bookstoremanager.users.dto.MessageDTO;
 import com.gflopes.bookstoremanager.users.dto.UserDTO;
+import com.gflopes.bookstoremanager.users.service.AuthenticationService;
 import com.gflopes.bookstoremanager.users.service.UserService;
 import com.gflopes.bookstoremanager.util.JsonConversionUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import static com.gflopes.bookstoremanager.util.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -33,15 +37,21 @@ public class UserControllerTests {
     @Mock
     private UserService userService;
 
+    @Mock
+    private AuthenticationService authenticationService;
+
     @InjectMocks
     private UserController userController;
 
     private UserDTOBuilder userDTOBuilder;
 
+    private JwtRequestBuilder jwtRequestBuilder;
+
     private MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
+        jwtRequestBuilder = JwtRequestBuilder.builder().build();
         userDTOBuilder = UserDTOBuilder.builder().build();
         mockMvc = MockMvcBuilders.standaloneSetup(userController)
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
@@ -60,7 +70,7 @@ public class UserControllerTests {
 
         mockMvc.perform(post(USERS_API_URL_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonConversionUtils.asJsonString(expectedCreatedUserDTO)))
+                        .content(asJsonString(expectedCreatedUserDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message", is(expectedCreationMessage)));
     }
@@ -72,7 +82,7 @@ public class UserControllerTests {
 
         mockMvc.perform(post(USERS_API_URL_PATH)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonConversionUtils.asJsonString(expectedCreatedUserDTO)))
+                        .content(asJsonString(expectedCreatedUserDTO)))
                         .andExpect(status().isBadRequest());
     }
 
@@ -101,8 +111,33 @@ public class UserControllerTests {
 
         mockMvc.perform(put(USERS_API_URL_PATH + "/" + expectedUserIdUpdated)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonConversionUtils.asJsonString(expectedUpdatedUserDTO)))
+                        .content(asJsonString(expectedUpdatedUserDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message", is(expectedUpdatedMessage)));
+    }
+
+    @Test
+    void whenPOSTIsCalledToAuthenticateUserThenOkShouldBeInformed() throws Exception {
+        JwtRequest jwtRequest = jwtRequestBuilder.buildJwtRequest();
+        JwtResponse expectedJwtToken = JwtResponse.builder().jwtToken("testToken").build();
+
+        when(authenticationService.createAuthenticationToken(jwtRequest)).thenReturn(expectedJwtToken);
+
+        mockMvc.perform(post(USERS_API_URL_PATH + "/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(jwtRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.jwtToken", is(expectedJwtToken.getJwtToken())));
+    }
+
+    @Test
+    void whenPOSTIsCalledToAuthenticateUserWithoutPasswordThenBadRequestShouldBeInformed() throws Exception {
+        JwtRequest jwtRequest = jwtRequestBuilder.buildJwtRequest();
+        jwtRequest.setPassword(null);
+
+        mockMvc.perform(post(USERS_API_URL_PATH + "/authenticate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(jwtRequest)))
+                .andExpect(status().isBadRequest());
     }
 }

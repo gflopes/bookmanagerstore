@@ -2,10 +2,12 @@ package com.gflopes.bookstoremanager.users.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gflopes.bookstoremanager.enums.Gender;
+import com.gflopes.bookstoremanager.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
@@ -47,4 +49,8 @@ public class UserDTO {
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Role role;
 }

@@ -1,6 +1,7 @@
 package com.gflopes.bookstoremanager.users.builder;
 
 import com.gflopes.bookstoremanager.enums.Gender;
+import com.gflopes.bookstoremanager.enums.Role;
 import com.gflopes.bookstoremanager.users.dto.UserDTO;
 import lombok.Builder;
 
@@ -33,6 +34,9 @@ public class UserDTOBuilder {
     @Builder.Default
     private LocalDate birthDate = LocalDate.of(1973, 9, 22);
 
+    @Builder.Default
+    private Role role = Role.USER;
+
     public UserDTO buildUserDTO() {
             return new UserDTO(id,
                     name,
@@ -41,7 +45,8 @@ public class UserDTOBuilder {
                     email,
                     username,
                     password,
-                    birthDate);
+                    birthDate,
+                    role);
     }
 
 }

@@ -8,6 +8,7 @@ import com.gflopes.bookstoremanager.users.exception.UserNotFoundException;
 import com.gflopes.bookstoremanager.users.mapper.UserMapper;
 import com.gflopes.bookstoremanager.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.gflopes.bookstoremanager.users.utils.MessageDTOUtils.createdMessage;
@@ -20,15 +21,19 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public MessageDTO create(UserDTO userToCreateDTO) {
         verifyUserExists(userToCreateDTO.getEmail(), userToCreateDTO.getUsername());
 
         User userToCreate = userMapper.toModel(userToCreateDTO);
+        userToCreate.setPassword(passwordEncoder.encode(userToCreateDTO.getPassword()));
         User createdUser = userRepository.save(userToCreate);
 
         return createdMessage(createdUser);
@@ -39,9 +44,10 @@ public class UserService {
 
         userToUpdateDTO.setId(foundUser.getId());
         User userToUpdate = userMapper.toModel(userToUpdateDTO);
+        userToUpdate.setPassword(passwordEncoder.encode(userToUpdateDTO.getPassword()));
         userToUpdate.setCreatedDate(foundUser.getCreatedDate());
-        User updatedUser = userRepository.save(userToUpdate);
 
+        User updatedUser = userRepository.save(userToUpdate);
         return updatedMessage(updatedUser);
     }
 

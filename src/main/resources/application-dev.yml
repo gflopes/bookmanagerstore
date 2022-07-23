@@ -19,5 +19,8 @@ spring:
   h2:
     console:
       enabled: true
+jwt:
+  secret: bookstore-manager-gustavo
+  validity: 18000
 
 
