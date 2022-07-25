@@ -1,15 +1,17 @@
-package com.gflopes.bookstoremanager.author.entity;
+package com.gflopes.bookstoremanager.publisher.entity;
 
 import com.gflopes.bookstoremanager.book.entity.Book;
 import com.gflopes.bookstoremanager.entity.Auditable;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @Entity
-public class Author extends Auditable {
+public class Publisher extends Auditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,9 +19,12 @@ public class Author extends Auditable {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @Column(columnDefinition = "integer default 0")
-    private int age;
+    @Column(nullable = false, unique = true, length = 100)
+    private String code;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
+    @Column(nullable = false, columnDefinition = "TIMESTAMP")
+    private LocalDate foundationDate;
+
+    @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
     private List<Book> books;
 }
