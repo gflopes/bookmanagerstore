@@ -6,7 +6,6 @@ import com.gflopes.bookstoremanager.book.dto.BookRequestDTO;
 import com.gflopes.bookstoremanager.book.dto.BookResponseDTO;
 import com.gflopes.bookstoremanager.book.service.BookService;
 import com.gflopes.bookstoremanager.user.dto.AuthenticatedUser;
-import org.hibernate.annotations.CollectionId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,9 +24,9 @@ import static com.gflopes.bookstoremanager.util.JsonConversionUtils.asJsonString
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -114,4 +113,33 @@ public class BookControllerTests {
                 .andExpect(jsonPath("$[0].isbn", is(expectedBookFoundDTO.getIsbn())));
     }
 
+    @Test
+    void whenDELETEIsIsCalledWithValidBookThenNoContentShouldBeReturned() throws Exception {
+        BookRequestDTO expectedBookToDeleteDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+
+        doNothing().when(bookService).deleteByIdAndUser(any(AuthenticatedUser.class), eq(expectedBookToDeleteDTO.getId()));
+
+        mockMvc.perform(delete(BOOKS_API_URL_PATH + "/" + expectedBookToDeleteDTO.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenPUTIsCalledThenStatusCreatedShouldByReturned() throws Exception {
+        BookRequestDTO expectedBookToUpdateDTO = bookRequestDTOBuilder.buildRequestBookDTO();
+        BookResponseDTO expectedUpdatedBookDTO = bookResponseDTOBuilder.buildResponseBookDTO();
+
+        when(bookService.updateByIdAndUser(
+                any(AuthenticatedUser.class),
+                eq(expectedBookToUpdateDTO.getId()),
+                eq(expectedBookToUpdateDTO))).thenReturn(expectedUpdatedBookDTO);
+
+        mockMvc.perform(put(BOOKS_API_URL_PATH + "/" + expectedBookToUpdateDTO.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(expectedBookToUpdateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(expectedUpdatedBookDTO.getId().intValue())))
+                .andExpect(jsonPath("$.name", is(expectedUpdatedBookDTO.getName())))
+                .andExpect(jsonPath("$.isbn", is(expectedUpdatedBookDTO.getIsbn())));
+    }
 }

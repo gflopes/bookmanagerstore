@@ -20,7 +20,7 @@ public interface BookControllerDocs {
     @Operation(summary = "Books create operation")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Success created book"),
-            @ApiResponse(responseCode = "400", description = "Missing required field(s) or an error on validation user rules system")
+            @ApiResponse(responseCode = "400", description = "Missing required field(s) or an error on validation book rules system")
     })
     BookResponseDTO create(AuthenticatedUser authenticatedUser, BookRequestDTO bookRequestDTO);
 
@@ -36,4 +36,21 @@ public interface BookControllerDocs {
             @ApiResponse(responseCode = "200", description = "Book list found authenticated user informed")
     })
     List<BookResponseDTO> findAllByUser(AuthenticatedUser authenticatedUser);
+
+    @Operation(summary = "Delete book by Id and User operation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success book deleted"),
+            @ApiResponse(responseCode = "404", description = "Book not found error code")
+    })
+    void deleteByIdAndUser(AuthenticatedUser authenticatedUser, Long bookId);
+
+    @Operation(summary = "Books update operation")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success updated book"),
+            @ApiResponse(responseCode = "404", description = "Book not found error code"),
+            @ApiResponse(responseCode = "400", description = "Missing required field(s) or an error on validation book rules system")
+    })
+    BookResponseDTO updateByIdAndUser(AuthenticatedUser authenticatedUser,
+                                      Long bookId,
+                                      BookRequestDTO bookRequestDTO);
 }
