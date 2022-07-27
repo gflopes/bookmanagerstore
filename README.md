@@ -14,7 +14,6 @@ Durante o projeto, são abordados os seguintes tópicos:
 * Desenvolvimento de testes unitários para validação das funcionalidades.
 * Apresentação do TDD (Test Driven Development), e como desenvolver funcionalidade na prática com o TDD.
 * Desenvolvimento de testes de integração com o Postman.
-* Abertura Pull requests e Code Reviews na prática, e como estas práticas aumentam a qualidade do nosso projeto.
 * Implantação do sistema na nuvem através do Heroku.
 
 Para executar o projeto no terminal, digite o seguinte comando:
