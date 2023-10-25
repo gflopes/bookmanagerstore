@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/books")
 public class BookController implements BookControllerDocs {
 
-    private BookService bookService;
+    private final BookService bookService;
 
     @Autowired
     public BookController(BookService bookService) {

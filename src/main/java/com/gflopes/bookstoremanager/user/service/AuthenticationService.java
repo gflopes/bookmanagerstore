@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private JwtTokenManager jwtTokenManager;
+    private final JwtTokenManager jwtTokenManager;
 
     public AuthenticationService(JwtTokenManager jwtTokenManager, UserRepository userRepository) {
         this.jwtTokenManager = jwtTokenManager;

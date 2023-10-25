@@ -18,7 +18,7 @@ public class AuthorService {
 
     private final static AuthorMapper authorMapper = AuthorMapper.INSTANCE;
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
     @Autowired
     public AuthorService(AuthorRepository authorRepository) {

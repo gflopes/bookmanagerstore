@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/v1/authors")
 public class AuthorController implements AuthorControllerDocs {
 
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
     @Autowired
     public AuthorController(AuthorService authorService) {
